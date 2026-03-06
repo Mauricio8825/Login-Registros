@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Montilla | Acceso Registros</title>
+  <style>
+    :root{
+      --bg:#0f1115;
+      --card:#171a21;
+      --line:#2b2f3a;
+      --text:#f3f4f6;
+      --muted:#a1a1aa;
+      --accent:#d32f2f;
+      --accent2:#b71c1c;
+      --ok:#22c55e;
+      --bad:#ef4444;
+      --shadow:0 18px 50px rgba(0,0,0,.35);
+      --radius:18px;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:
+        linear-gradient(135deg, rgba(211,47,47,.10), transparent 35%),
+        linear-gradient(180deg, #0b0c10, #111318 45%, #0f1115);
+      color:var(--text);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+
+    .wrap{
+      width:100%;
+      max-width:480px;
+    }
+
+    .card{
+      background:rgba(23,26,33,.94);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:24px;
+      backdrop-filter: blur(8px);
+    }
+
+    .brand{
+      text-align:center;
+      margin-bottom:22px;
+    }
+
+    .brand h1{
+      margin:0;
+      font-size:1.5rem;
+      letter-spacing:.5px;
+    }
+
+    .brand p{
+      margin:8px 0 0;
+      color:var(--muted);
+      font-size:.95rem;
+    }
+
+    .field{
+      margin-bottom:14px;
+    }
+
+    .field label{
+      display:block;
+      margin-bottom:6px;
+      font-size:.92rem;
+      color:#e5e7eb;
+      font-weight:700;
+    }
+
+    .field input{
+      width:100%;
+      padding:13px 14px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#10131a;
+      color:var(--text);
+      outline:none;
+      font-size:1rem;
+    }
+
+    .field input:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 0 3px rgba(211,47,47,.18);
+    }
+
+    .btn{
+      width:100%;
+      border:none;
+      border-radius:12px;
+      padding:13px 14px;
+      font-size:1rem;
+      font-weight:800;
+      cursor:pointer;
+      transition:.18s ease;
+    }
+
+    .btn-primary{
+      background:linear-gradient(180deg, var(--accent), var(--accent2));
+      color:#fff;
+    }
+
+    .btn-primary:hover{ transform:translateY(-1px); }
+
+    .btn-secondary{
+      margin-top:10px;
+      background:#232734;
+      color:#fff;
+      border:1px solid #343949;
+    }
+
+    .msg{
+      margin-top:14px;
+      min-height:22px;
+      font-size:.93rem;
+      text-align:center;
+      font-weight:700;
+    }
+
+    .msg.ok{ color:var(--ok); }
+    .msg.bad{ color:var(--bad); }
+    .msg.muted{ color:var(--muted); }
+
+    .hidden{ display:none; }
+
+    .topbar{
+      margin-bottom:18px;
+      padding:12px 14px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#11151d;
+      line-height:1.45;
+    }
+
+    .hint{
+      margin-top:10px;
+      color:var(--muted);
+      font-size:.85rem;
+      text-align:center;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" id="loginCard">
+      <div class="brand">
+        <h1>Acceso a Registros</h1>
+        <p>Captura manual de entradas</p>
+      </div>
+
+      <div class="field">
+        <label for="usuario">Usuario</label>
+        <input type="text" id="usuario" placeholder="Ej. MMendez" autocomplete="username" />
+      </div>
+
+      <div class="field">
+        <label for="clave">Clave</label>
+        <input type="password" id="clave" placeholder="Tu contraseña" autocomplete="current-password" />
+      </div>
+
+      <button class="btn btn-primary" onclick="hacerLogin()">Ingresar</button>
+      <div class="msg muted" id="loginMsg"></div>
+      <div class="hint">Solo agrega registros nuevos. Las correcciones van directo por administración.</div>
+    </div>
+
+    <div class="card hidden" id="appCard">
+      <div class="topbar" id="infoUsuario"></div>
+
+      <div class="field">
+        <label for="oc">OC</label>
+        <input type="text" id="oc" placeholder="Orden de compra" />
+      </div>
+
+      <div class="field">
+        <label for="proveedor">Proveedor</label>
+        <input type="text" id="proveedor" placeholder="Proveedor" />
+      </div>
+
+      <div class="field">
+        <label for="calibre">Calibre</label>
+        <input type="text" id="calibre" placeholder="Calibre" />
+      </div>
+
+      <div class="field">
+        <label for="peso">Peso</label>
+        <input type="text" id="peso" placeholder="Peso" />
+      </div>
+
+      <div class="field">
+        <label for="tipoCinta">Tipo de cinta</label>
+        <input type="text" id="tipoCinta" placeholder="Tipo de cinta" />
+      </div>
+
+      <div class="field">
+        <label for="ancho">Ancho</label>
+        <input type="text" id="ancho" placeholder="Ancho" />
+      </div>
+
+      <button class="btn btn-primary" onclick="guardarRegistro()">Guardar registro</button>
+      <button class="btn btn-secondary" onclick="cerrarSesion()">Cerrar sesión</button>
+
+      <div class="msg muted" id="appMsg"></div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbzA_vfYNbJVBZfdXv-rMSRSylXAGxVMsUL5TmMEpKST0AF7GgLAT--pdQ0pXa1LrYmE/exec";
+
+    let sesion = null;
+
+    function setMsg(id, text, type = "muted"){
+      const el = document.getElementById(id);
+      el.className = "msg " + type;
+      el.textContent = text;
+    }
+
+    async function postData(payload){
+      const res = await fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: { "Content-Type": "text/plain;charset=utf-8" }
+      });
+
+      const text = await res.text();
+
+      try {
+        return JSON.parse(text);
+      } catch (e) {
+        return { ok:false, msg:"La respuesta del servidor no es JSON válido", raw:text };
+      }
+    }
+
+    async function hacerLogin(){
+      const usuario = document.getElementById("usuario").value.trim();
+      const clave = document.getElementById("clave").value.trim();
+
+      if(!usuario || !clave){
+        setMsg("loginMsg", "Captura usuario y clave", "bad");
+        return;
+      }
+
+      setMsg("loginMsg", "Validando acceso...", "muted");
+
+      try{
+        const data = await postData({
+          action: "login",
+          usuario,
+          clave
+        });
+
+        if(data.ok){
+          sesion = data.user || { usuario, rol: "Sin rol" };
+
+          document.getElementById("loginCard").classList.add("hidden");
+          document.getElementById("appCard").classList.remove("hidden");
+
+          document.getElementById("infoUsuario").innerHTML = `
+            <b>Usuario:</b> ${sesion.usuario || ""}<br>
+            <b>Rol:</b> ${sesion.rol || ""}
+          `;
+
+          setMsg("appMsg", "Acceso correcto", "ok");
+        }else{
+          setMsg("loginMsg", data.msg || "Usuario o clave inválidos", "bad");
+        }
+      }catch(err){
+        setMsg("loginMsg", "Error de conexión con Apps Script", "bad");
+      }
+    }
+
+    async function guardarRegistro(){
+      if(!sesion){
+        setMsg("appMsg", "Sesión inválida", "bad");
+        return;
+      }
+
+      const oc = document.getElementById("oc").value.trim();
+      const proveedor = document.getElementById("proveedor").value.trim();
+      const calibre = document.getElementById("calibre").value.trim();
+      const peso = document.getElementById("peso").value.trim();
+      const tipoCinta = document.getElementById("tipoCinta").value.trim();
+      const ancho = document.getElementById("ancho").value.trim();
+
+      if(!oc && !proveedor && !calibre && !peso && !tipoCinta && !ancho){
+        setMsg("appMsg", "Captura al menos un dato", "bad");
+        return;
+      }
+
+      setMsg("appMsg", "Guardando registro...", "muted");
+
+      try{
+        const data = await postData({
+          action: "guardarEntrada",
+          usuario: sesion.usuario,
+          rol: sesion.rol,
+          oc,
+          proveedor,
+          calibre,
+          peso,
+          tipoCinta,
+          ancho
+        });
+
+        if(data.ok){
+          document.getElementById("oc").value = "";
+          document.getElementById("proveedor").value = "";
+          document.getElementById("calibre").value = "";
+          document.getElementById("peso").value = "";
+          document.getElementById("tipoCinta").value = "";
+          document.getElementById("ancho").value = "";
+
+          setMsg("appMsg", data.msg + " | Fila: " + data.row, "ok");
+        }else{
+          setMsg("appMsg", data.msg || "No se pudo guardar", "bad");
+        }
+      }catch(err){
+        setMsg("appMsg", "Error de conexión con Apps Script", "bad");
+      }
+    }
+
+    function cerrarSesion(){
+      sesion = null;
+      document.getElementById("usuario").value = "";
+      document.getElementById("clave").value = "";
+      document.getElementById("oc").value = "";
+      document.getElementById("proveedor").value = "";
+      document.getElementById("calibre").value = "";
+      document.getElementById("peso").value = "";
+      document.getElementById("tipoCinta").value = "";
+      document.getElementById("ancho").value = "";
+      document.getElementById("loginCard").classList.remove("hidden");
+      document.getElementById("appCard").classList.add("hidden");
+      setMsg("loginMsg", "", "muted");
+      setMsg("appMsg", "", "muted");
+    }
+  </script>
+</body>
+</html>
